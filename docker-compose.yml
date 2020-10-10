@@ -16,3 +16,8 @@ services:
     restart: always
     ports:
       - "40:40"
+
+  mongodb:
+    build: ./mongodb
+    container_name: mongodb
+    restart: always

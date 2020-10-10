@@ -11,3 +11,11 @@ def index():
         return f"Hello from {app_name} running in a Docker container behind Nginx!"
 
     return "Hello from Flask"
+
+@app.route("/products", methods=["GET", "POST"])
+def getpost():
+    return 'products'
+
+@app.route("/products/<id>", methods=["GET", "PUT", "DELETE"])
+def getputdelete(id):
+    return 'single product with id: {}'.format(id)
