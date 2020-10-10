@@ -6,11 +6,20 @@ services:
     container_name: flask
     restart: always
     environment:
-      - APP_NAME=MyFlaskApp
+      APP_NAME: MyFlaskApp
+      MONGODB_DATABASE: flaskdb
+      MONGODB_USERNAME: daart
+      MONGODB_PASSWORD: pass1234
+      MONGODB_HOSTNAME: mongodb
+    # volumes:
+    # - .:/eshop
+    # - .:/logs/eshop
+    # - appdata:/var/www
+    # - appdata:/Users/artem.kuzko/projects/docker_shared/container_volumes/flask/eshop
     expose:
       - 4040
     depends_on:
-      - mongodb
+      - db
     networks:
       - backend
       - frontend
@@ -21,20 +30,30 @@ services:
     restart: always
     ports:
       - "40:40"
+    # volumes:
+    #   - nginxdata:/var/log/nginx
+    #   - nginxdata:/Users/artem.kuzko/projects/docker_shared/container_logs/nginx/eshop
+    depends_on:
+      - flask
     networks:
       - frontend
 
-  mongodb:
+  db:
     image: mongo
-    container_name: mongodb
+    container_name: db
     restart: unless-stopped
-    # command: mongod --auth
+    command: mongod --auth
     environment:
       MONGO_INITDB_ROOT_USERNAME: daart
-      MONGO_INITDB_ROOT_PASSWORD: user1243
-      # MONGO_INITDB_DATABASE: flaskdb
-      # MONGODB_DATA_DIR: /data/db
-      # MONDODB_LOG_DIR: /dev/null
+      MONGO_INITDB_ROOT_PASSWORD: pass1234
+      MONGO_INITDB_DATABASE: flaskdb
+      MONGODB_DATA_DIR: /data/db
+      MONDODB_LOG_DIR: /dev/null
+    # volumes:
+    #   - mongodbdata:/data/db
+    # - mongodbdata:/Users/artem.kuzko/projects/docker_shared/container_volumes/mongodbdata/eshop
+    #   - mongodbdata:/Users/artem.kuzko/projects/docker_shared/container_logs/mongodbdata/eshop
+
     expose:
         - 27017
     networks:
@@ -45,3 +64,11 @@ networks:
     driver: bridge
   backend:
     driver: bridge
+
+# volumes:
+#   mongodbdata:
+#     driver: local
+#   appdata:
+#     driver: local
+#   nginxdata:
+#     driver: local
